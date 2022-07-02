@@ -141,15 +141,6 @@ Test Test::operator*(const Test& test) const
 	return result;
 }
 
-//Test& Test::operator=(const Test& test)
-//{
-//	if (this == &test)
-//		return *this;
-//	this->m_a = test.m_a;	
-//	
-//	return *this;
-//}
-
 int main()
 {
 	srand(time(0));
