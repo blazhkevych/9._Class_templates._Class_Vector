@@ -7,26 +7,148 @@
 объектов шаблонного класса важно типизировать шаблон
 разными типами данных (стандартными и пользовательскими).
 ################################################################################################
-		СТАТУС : Не готово.
+		СТАТУС : Готово.
 		ДОРАБОТКИ:
-* СДелать перегрузку для пользовательского типа поелементного заполнения массива
-* Попробовать вынести все присвоения в списковую инициализацию(только конструкторы).
+*
 		ИЗВЕСТНЫЕ ОШИБКИ:
 *
 		ПРОТЕСТИРОВАТЬ:
 *
 		ВОПРОСЫ:
-* Как быть с присвоением значений елементам для разных типов в "Vector<T>::Vector(int size)" ?
 *
-
 		ВИДЕО: 02:36:18 (начало дз), 01:43:00(шаблоны класса), 02:05:40 (о шаблонном веркторе)
 ################################################################################################
 */
 
+// Класс для тестирования шаблонного класса Vector.
 #include <iostream>
 #include "Vector.h"
 using std::cin;
 using std::boolalpha;
+
+class Test
+{
+	int m_a;
+public:
+	Test() :m_a{ 0 } {};
+	Test(int a) :m_a{ a } {};
+
+	void Set(int n)
+	{
+		m_a = n;
+	}
+	int Get()
+	{
+		return m_a;
+	}
+	void Show()
+	{
+		cout << m_a << endl;
+	}
+
+	friend ostream& operator<<(ostream& os, const Test& obj);
+	friend istream& operator>>(istream& os, Test& obj);
+
+	Test operator + (const Test& test) const;
+
+	Test operator - (const Test& test) const;
+
+	// Увеличение всех компонент вектора на единицу (префикс).	
+	Test& operator ++ ();
+
+	// Увеличение всех компонент вектора на единицу (постфикс).	
+	Test operator ++ (int postfix);
+
+	// Уменьшение всех компонент вектора на	единицу (префикс).
+	Test& operator--();
+
+	// Уменьшение всех компонент вектора на единицу (постфикс).
+	Test operator--(int postfix);
+
+	//// Перегруженный оператор присваивания с копированием.
+	//Test& operator = (const Test& test);
+
+	// Перегрузка оператора ">" для "this > object".
+	bool operator > (const Test& test) const;
+
+	// Перегрузка оператора "*" для "this * object".
+	Test operator * (const Test& test) const;
+
+};
+
+ostream& operator<<(ostream& os, const Test& obj)
+{
+	cout << obj.m_a << "\t";
+	return os;
+}
+
+istream& operator>>(istream& is, Test& obj)
+{
+	cin >> obj.m_a;
+	return is;
+}
+
+Test Test::operator+(const Test& test) const
+{
+	Test result{};
+	result.m_a = m_a + test.m_a;
+	return result;
+}
+
+Test Test::operator-(const Test& test) const
+{
+	Test result{};
+	result.m_a = m_a - test.m_a;
+	return result;
+}
+
+Test& Test::operator++()
+{
+	++m_a;
+	return *this;
+}
+
+Test Test::operator++(int postfix)
+{
+	Test tmp = *this;
+	m_a++;
+	return tmp;
+}
+
+Test& Test::operator--()
+{
+	--m_a;
+	return *this;
+}
+
+Test Test::operator--(int postfix)
+{
+	Test tmp = *this;
+	m_a--;
+	return tmp;
+}
+
+bool Test::operator>(const Test& test) const
+{
+
+	return m_a > test.m_a ? m_a : test.m_a;
+}
+
+Test Test::operator*(const Test& test) const
+{
+	Test result{};
+	result.m_a = m_a * test.m_a;
+	return result;
+}
+
+//Test& Test::operator=(const Test& test)
+//{
+//	if (this == &test)
+//		return *this;
+//	this->m_a = test.m_a;	
+//	
+//	return *this;
+//}
 
 int main()
 {
@@ -548,7 +670,14 @@ int main()
 	v10_double.Print();
 	cout << endl;
 	//class Test
-
+	cout << "\tv9_class" << endl;
+	Vector<Test> v9_class{ 10 };
+	v9_class.Input();
+	v9_class.Print();
+	Vector<Test> v10_class = v9_class;
+	cout << "\tv10_class = v9_class" << endl;
+	v10_class.Print();
+	cout << endl;
 
 	// Перегруженный оператор индексации.
 	//int
@@ -568,6 +697,15 @@ int main()
 	v11_double[3] = 999;
 	cout << "\tv11_double[3] = 999" << endl;
 	v11_double.Print();
+	cout << endl;
+	//class Test
+	cout << "\tv11_class" << endl;
+	Vector<Test> v11_class{ 10 };
+	v11_class.Input();
+	v11_class.Print();
+	v11_class[3] = 999;
+	cout << "\tv11_class[3] = 999" << endl;
+	v11_class.Print();
 	cout << endl;
 
 	// Сложение двух векторов.
@@ -599,6 +737,20 @@ int main()
 	cout << "\tv14_double = v12_double + v13_double" << endl;
 	v14_double.Print();
 	cout << endl;
+	//class Test
+	cout << "\tv12_class" << endl;
+	Vector<Test> v12_class{ 10 };
+	v12_class.Input();
+	v12_class.Print();
+	cout << "\tv13_class" << endl;
+	Vector<Test> v13_class{ 7 };
+	v13_class.Input();
+	v13_class.Print();
+	Vector<Test> v14_class;
+	v14_class = v12_class + v13_class;
+	cout << "\tv14_class = v12_class + v13_class" << endl;
+	v14_class.Print();
+	cout << endl;
 
 	// Сложение вектора с числом (каждый компонент вектора складывается с числом).
 	//int
@@ -619,6 +771,16 @@ int main()
 	int number1{ 9 }; // Число для складываня с компонентами вектора.
 	v15_double = v15_double + number1;
 	cout << "\tv15_double = v15_double + number1(number1 = 9)" << endl;
+	v15_double.Print();
+	cout << endl;
+	//class Test
+	Vector<Test> v15_class{ 10 };
+	v15_class.Input();
+	cout << "\tv15_class" << endl;
+	v15_class.Print();
+	int number11{ 9 }; // Число для складываня с компонентами вектора.
+	v15_class = v15_class + number11;
+	cout << "\tv15_class = v15_class + number1(number11 = 9)" << endl;
 	v15_double.Print();
 	cout << endl;
 
@@ -648,6 +810,19 @@ int main()
 	v16_double += v17_double;
 	cout << "\tv16_double += v17_double" << endl;
 	v16_double.Print();
+	cout << endl;
+	//class Test
+	Vector<Test> v16_class{ 10 };
+	v16_class.Input();
+	cout << "\tv16" << endl;
+	v16_class.Print();
+	Vector<Test> v17_class{ 10 };
+	v17_class.Input();
+	cout << "\tv17_class" << endl;
+	v17_class.Print();
+	v16_class += v17_class;
+	cout << "\tv16_class += v17_class" << endl;
+	v16_class.Print();
 	cout << endl;
 
 	// Вычитание двух векторов.
@@ -679,6 +854,20 @@ int main()
 	cout << "\tv20_double = v18_double - v19_double" << endl;
 	v20_double.Print();
 	cout << endl;
+	//class Test
+	Vector<Test> v18_class{ 7 };
+	v18_class.Input();
+	cout << "\tv18_class" << endl;
+	v18_class.Print();
+	Vector<Test> v19_class{ 10 };
+	v19_class.Input();
+	cout << "\tv19_class" << endl;
+	v19_class.Print();
+	Vector<Test> v20_class{ 10 };
+	v20_class = v18_class - v19_class;
+	cout << "\tv20_class = v18_class - v19_class" << endl;
+	v20_class.Print();
+	cout << endl;
 
 	// Вычитание числа из вектора (из каждого компонента вектора вычитывается число).
 	//int
@@ -700,6 +889,16 @@ int main()
 	v21_double = v21_double - number3;
 	cout << "\tv21_double = v21_double - number3(number3 = 9)" << endl;
 	v21_double.Print();
+	cout << endl;
+	//class Test
+	Vector<Test> v21_class{ 10 };
+	v21_class.Input();
+	cout << "\tv21_class" << endl;
+	v21_class.Print();
+	int number33{ 9 }; // Число для вычитания с компонентами вектора.
+	v21_class = v21_class - number33;
+	cout << "\tv21_class = v21_class - number33(number33 = 9)" << endl;
+	v21_class.Print();
 	cout << endl;
 
 	// Перегруженный оператор -= для вычитания двух векторов.
@@ -728,6 +927,19 @@ int main()
 	v22_double -= v23_double;
 	cout << "\tv22_double -= v23_double" << endl;
 	v22_double.Print();
+	cout << endl;
+	//class Test
+	Vector<Test> v22_class{ 7 };
+	v22_class.Input();
+	cout << "\tv22_class" << endl;
+	v22_class.Print();
+	Vector<Test> v23_class{ 10 };
+	v23_class.Input();
+	cout << "\tv23_class" << endl;
+	v23_class.Print();
+	v22_class -= v23_class;
+	cout << "\tv22_class -= v23_class" << endl;
+	v22_class.Print();
 	cout << endl;
 
 	// Умножение векторов.
@@ -759,6 +971,20 @@ int main()
 	cout << "\tv26_double = v24_double * v25_double" << endl;
 	v26_double.Print();
 	cout << endl;
+	//class Test
+	Vector<Test> v24_class{ 7 };
+	v24_class.Input();
+	cout << "\tv24_class" << endl;
+	v24_class.Print();
+	Vector<Test> v25_class{ 10 };
+	v25_class.Input();
+	cout << "\tv25_class" << endl;
+	v25_class.Print();
+	Vector<Test> v26_class{ 10 };
+	v26_class = v24_class * v25_class;
+	cout << "\tv26_class = v24_class * v25_class" << endl;
+	v26_class.Print();
+	cout << endl;
 
 	// Умножение вектора на число (каждый компонент вектора умножается на число).
 	//int
@@ -781,6 +1007,16 @@ int main()
 	cout << "\tv27_double = v27_double * number5(number5 = 9)" << endl;
 	v27_double.Print();
 	cout << endl;
+	//class Test
+	Vector<Test> v27_class{ 10 };
+	v27_class.Input();
+	cout << "\tv27_class" << endl;
+	v27_class.Print();
+	int number55{ 9 }; // Число для умножения с компонентами вектора.
+	v27_class = v27_class * number55;
+	cout << "\tv27_class = v27_class * number55(number55 = 9)" << endl;
+	v27_class.Print();
+	cout << endl;
 
 	// Перегруженный оператор *= для умножения вектора на число.
 	//int
@@ -800,8 +1036,18 @@ int main()
 	v28_double.Print();
 	int number7{ 9 }; // Число для умножения с компонентами вектора.
 	v28_double *= number7;
-	cout << "\tv28_double *= number7(number7 = 9.9)" << endl;
+	cout << "\tv28_double *= number7(number7 = 9)" << endl;
 	v28_double.Print();
+	cout << endl;
+	//class Test
+	Vector<Test> v28_class{ 7 };
+	v28_class.Input();
+	cout << "\tv28_class" << endl;
+	v28_class.Print();
+	int number77{ 9 }; // Число для умножения с компонентами вектора.
+	v28_class *= number7;
+	cout << "\tv28_class *= number77(number77 = 9)" << endl;
+	v28_class.Print();
 	cout << endl;
 
 	// Перегруженный оператор >>. Ввод вектора с клавиатуры.
@@ -813,6 +1059,10 @@ int main()
 	Vector<double> v29_double{ 5 };
 	cout << "\tEnter Vector<double>:";
 	cin >> v29_double;
+	//class Test
+	Vector<Test> v29_class{ 5 };
+	cout << "\tEnter Vector<class>:";
+	cin >> v29_class;
 
 	// Перегруженный оператор <<. Вывод вектора на экран.
 	//int
@@ -821,6 +1071,9 @@ int main()
 	//double
 	cout << "\tv29_double"
 		<< v29_double;
+	//class Test
+	cout << "\tv29_class"
+		<< v29_class;
 
 	// Реализация семантики переноса с использованием r-value ссылок.
 	// Конструктор переноса.
@@ -844,6 +1097,16 @@ int main()
 	Vector<double> v32_double = v30_double + v31_double; // Вызов конструктора переноса.
 	cout << "\tVector<double> v32_double = v30_double + v31_double";
 	cout << v32_double;
+	//class Test
+	Vector<Test> v30_class{ 10 };
+	cout << "\tv30_class";
+	cout << v30_class;
+	Vector<Test> v31_class{ 10 };
+	cout << "\tv31_class";
+	cout << v31_class;
+	Vector<Test> v32_class = v30_class + v31_class; // Вызов конструктора переноса.
+	cout << "\tVector<class> v32_class = v30_class + v31_class";
+	cout << v32_class;
 
 	// Реализация семантики переноса с использованием r-value ссылок.
 	// Перегруженный оператор присваивания с переносом.
@@ -869,6 +1132,17 @@ int main()
 	v35_double = v33_double + v34_double; // Присваивание с переносом.
 	cout << "\tVector<double> v35_double = v33_double + v34_double";
 	cout << v35_double;
+	//class Test
+	Vector<Test> v33_class{ 10 };
+	cout << "\tv33_class";
+	cout << v33_class;
+	Vector<Test> v34_class{ 10 };
+	cout << "\tv34_class";
+	cout << v34_class;
+	Vector<Test> v35_class{ 10 };
+	v35_class = v33_class + v34_class; // Присваивание с переносом.
+	cout << "\tVector<class> v35_class = v33_class + v34_class";
+	cout << v35_class;
 
 	delete[]arr_int;
 	delete[]arr_double;

@@ -112,7 +112,7 @@ public:
 };
 
 ///////////////////////////////////////////////
-// Реализация шаблонных методов класса Vector//
+///Реализация шаблонных методов класса Vector//
 ///////////////////////////////////////////////
 
 // Методы-аксессоры:
@@ -123,7 +123,7 @@ int Vector<T>::GetSize() const
 	return m_size;
 }
 template<typename T>
-inline T* Vector<T>::GetVect() const
+T* Vector<T>::GetVect() const
 {
 	return m_vect;
 }
@@ -143,7 +143,7 @@ Vector<T>::Vector(int size)
 
 // Конструктор, позволяющий проинициализировать вектор с помощью существующего массива.
 template<typename T>
-inline Vector<T>::Vector(const T* ptr, int size)
+Vector<T>::Vector(const T* ptr, int size)
 {
 	m_size = size;
 	m_vect = new T[m_size];
@@ -153,7 +153,7 @@ inline Vector<T>::Vector(const T* ptr, int size)
 
 // Конструктор копирования.
 template<typename T>
-inline Vector<T>::Vector(const Vector<T>& v)
+Vector<T>::Vector(const Vector<T>& v)
 {
 	int size = v.GetSize();
 	m_vect = new T[size];
@@ -209,7 +209,7 @@ Vector<T>& Vector<T>::operator--()
 
 // Уменьшение всех компонент вектора на единицу (постфикс).	
 template<typename T>
-inline Vector<T> Vector<T>::operator--(int postfix)
+Vector<T> Vector<T>::operator--(int postfix)
 {
 	Vector<T> tmp = *this;
 	for (int i = 0; i < m_size; i++)
@@ -219,7 +219,7 @@ inline Vector<T> Vector<T>::operator--(int postfix)
 
 // Перегруженный оператор присваивания с копированием.
 template<typename T>
-inline Vector<T>& Vector<T>::operator=(const Vector& v)
+Vector<T>& Vector<T>::operator=(const Vector& v)
 {
 	if (this == &v)
 		return *this;
@@ -258,7 +258,7 @@ T& Vector<T>::operator[](int index) // возможно нужно "int&" или
 
 // Сложение двух векторов.
 template<typename T>
-inline Vector<T> Vector<T>::operator+(const Vector& v)
+Vector<T> Vector<T>::operator+(const Vector& v)
 {
 	int sizeLess = m_size < v.m_size ? m_size : v.m_size;	// Вычисляем вектор с меньшей размерностью.
 	int sizeBigger = m_size > v.m_size ? m_size : v.m_size;	// Вычисляем вектор с большей размерностью.
@@ -267,7 +267,8 @@ inline Vector<T> Vector<T>::operator+(const Vector& v)
 	for (int i = 0; i < sizeBigger; i++)
 		if (i >= sizeLess)
 		{
-			result[i] = (*(this->m_vect + i)) > (*(v.GetVect() + i)) ? (*(this->m_vect + i)) : (*(v.GetVect() + i));
+			//result[i] = (*(this->m_vect + i)) > (*(v.GetVect() + i)) ? (*(this->m_vect + i)) : (*(v.GetVect() + i));
+			result[i] = 0;
 		}
 		else
 			result[i] = *(this->m_vect + i) + *(v.GetVect() + i);
@@ -288,7 +289,7 @@ Vector<T> Vector<T>::operator+(int n)
 
 // Перегруженный оператор += для сложения двух векторов.
 template<typename T>
-inline Vector<T>& Vector<T>::operator+=(const Vector& v)
+Vector<T>& Vector<T>::operator+=(const Vector& v)
 {
 	*this = this->operator+(v);
 
@@ -297,7 +298,7 @@ inline Vector<T>& Vector<T>::operator+=(const Vector& v)
 
 // Вычитание двух векторов.
 template<typename T>
-inline Vector<T> Vector<T>::operator-(const Vector& v)
+Vector<T> Vector<T>::operator-(const Vector& v)
 {
 	int sizeLess = m_size < v.m_size ? m_size : v.m_size;	// Вычисляем вектор с меньшей размерностью.
 	int sizeBigger = m_size > v.m_size ? m_size : v.m_size;	// Вычисляем вектор с большей размерностью.
@@ -306,7 +307,8 @@ inline Vector<T> Vector<T>::operator-(const Vector& v)
 	for (int i = 0; i < sizeBigger; i++)
 		if (i >= sizeLess)
 		{
-			result[i] = (*(this->m_vect + i)) > (*(v.GetVect() + i)) ? (*(this->m_vect + i)) : (*(v.GetVect() + i));
+			//result[i] = (*(this->m_vect + i)) > (*(v.GetVect() + i)) ? (*(this->m_vect + i)) : (*(v.GetVect() + i));
+			result[i] = 0;
 		}
 		else
 			result[i] = *(this->m_vect + i) - *(v.GetVect() + i);
@@ -316,7 +318,7 @@ inline Vector<T> Vector<T>::operator-(const Vector& v)
 
 // Вычитание числа из вектора (из каждого компонента вектора вычитывается число).
 template<typename T>
-inline Vector<T> Vector<T>::operator-(int n)
+Vector<T> Vector<T>::operator-(int n)
 {
 	Vector<T> result{ m_size };
 	result.Clear();
@@ -327,14 +329,14 @@ inline Vector<T> Vector<T>::operator-(int n)
 
 // Перегруженный оператор -= для вычитания двух векторов.
 template<typename T>
-inline Vector<T>& Vector<T>::operator-=(const Vector& v)
+Vector<T>& Vector<T>::operator-=(const Vector& v)
 {
 	return *this = this->operator-(v);
 }
 
 // Умножение векторов.
 template<typename T>
-inline Vector<T> Vector<T>::operator*(const Vector& v)
+Vector<T> Vector<T>::operator*(const Vector& v)
 {
 	int sizeLess = m_size < v.m_size ? m_size : v.m_size;	// Вычисляем вектор с меньшей размерностью.
 	int sizeBigger = m_size > v.m_size ? m_size : v.m_size;	// Вычисляем вектор с большей размерностью.
@@ -343,7 +345,8 @@ inline Vector<T> Vector<T>::operator*(const Vector& v)
 	for (int i = 0; i < sizeBigger; i++)
 		if (i >= sizeLess)
 		{
-			result[i] = (*(this->m_vect + i)) > (*(v.GetVect() + i)) ? (*(this->m_vect + i)) : (*(v.GetVect() + i));
+			//result[i] = (*(this->m_vect + i)) > (*(v.GetVect() + i)) ? (*(this->m_vect + i)) : (*(v.GetVect() + i));
+			result[i] = 0;
 		}
 		else
 			result[i] = *(this->m_vect + i) * *(v.GetVect() + i);
@@ -353,7 +356,7 @@ inline Vector<T> Vector<T>::operator*(const Vector& v)
 
 // Умножение вектора на число (каждый компонент вектора умножается на число).
 template<typename T>
-inline Vector<T> Vector<T>::operator*(int n)
+Vector<T> Vector<T>::operator*(int n)
 {
 	Vector<T> result{ m_size };
 	result.Clear();
@@ -364,7 +367,7 @@ inline Vector<T> Vector<T>::operator*(int n)
 
 // Перегруженный оператор *= для умножения вектора на число.
 template<typename T>
-inline Vector<T>& Vector<T>::operator*=(int n)
+Vector<T>& Vector<T>::operator*=(int n)
 {
 	return *this = this->operator*(n);
 }
@@ -403,7 +406,7 @@ void Vector<T>::Print() const
 
 // Метод заполнения вектора.
 template<typename T>
-inline void Vector<T>::Input()
+void Vector<T>::Input()
 {
 	int min = 10; // Минимальное значение.
 	int max = 99; // Максимальное значение.
@@ -414,7 +417,7 @@ inline void Vector<T>::Input()
 
 // Метод очистки вектора (заполнет все элементы нулями).
 template<typename T>
-inline void Vector<T>::Clear()
+void Vector<T>::Clear()
 {
 	for (int i = 0; i < m_size; i++)
 		m_vect[i] = 0;
@@ -422,14 +425,14 @@ inline void Vector<T>::Clear()
 
 // Метод возвращает истину, если вектор пустой (m_size <= 0).
 template<typename T>
-inline bool Vector<T>::IsEmpty() const
+bool Vector<T>::IsEmpty() const
 {
 	return m_size <= 0 ? true : false;
 }
 
 // Метод добавления элемента в вектор.
 template<typename T>
-inline void Vector<T>::Add(const T& item)
+void Vector<T>::Add(const T& item)
 {
 	T* p = new T[++m_size];
 	if (m_vect != nullptr)
@@ -450,7 +453,7 @@ inline void Vector<T>::Add(const T& item)
 
 // Метод вставки элемента в вектор по заданному индексу.
 template<typename T>
-inline void Vector<T>::Insert(int index, const T& item)
+void Vector<T>::Insert(int index, const T& item)
 {
 	if (index < 0 || index > m_size - 1)
 		return;
@@ -473,7 +476,7 @@ inline void Vector<T>::Insert(int index, const T& item)
 
 // Метод удаления элемента из вектора по заданному индексу.
 template<typename T>
-inline void Vector<T>::Remove(int index)
+void Vector<T>::Remove(int index)
 {
 	if (index < 0 || index > m_size - 1)
 		return;
@@ -488,99 +491,4 @@ inline void Vector<T>::Remove(int index)
 	delete[]m_vect;
 	m_vect = p;
 	p = nullptr;
-}
-
-// Класс для тестирования шаблонного класса Vector.
-class Test
-{
-	int m_a;
-public:
-	Test() :m_a{ 0 } {};
-	Test(int a) :m_a{ a } {};
-
-	void Set(int n)
-	{
-		m_a = n;
-	}
-	int Get()
-	{
-		return m_a;
-	}
-	void Show()
-	{
-		cout << m_a << endl;
-	}
-
-	friend ostream& operator<<(ostream& os, const Test& obj);
-	friend istream& operator>>(istream& os, Test& obj);
-	
-	Test operator + (const Test& test) const;
-
-	Test operator - (const Test& test) const;
-
-	// Увеличение всех компонент вектора на единицу (префикс).	
-	Test& operator ++ ();
-
-	// Увеличение всех компонент вектора на единицу (постфикс).	
-	Test operator ++ (int postfix);
-
-	// Уменьшение всех компонент вектора на	единицу (префикс).
-	Test& operator--();
-
-	// Уменьшение всех компонент вектора на единицу (постфикс).
-	Test operator--(int postfix);
-
-};
-
-ostream& operator<<(ostream& os, const Test& obj)
-{
-	cout << obj.m_a << "\t";
-	return os;
-}
-
-istream& operator>>(istream& is, Test& obj)
-{
-	cin >> obj.m_a;
-	return is;
-}
-
-Test Test::operator+(const Test& test) const
-{
-	Test result{};
-	result.m_a = m_a + test.m_a;
-	return result;
-}
-
-Test Test::operator-(const Test& test) const
-{
-	Test result{};
-	result.m_a = m_a - test.m_a;
-	return result;
-}
-
-Test& Test::operator++()
-{
-	++m_a;
-	return *this;
-}
-
-
-Test Test::operator++(int postfix)
-{
-	Test tmp = *this;
-	m_a++;
-	return tmp;
-}
-
-Test& Test::operator--()
-{
-	--m_a;	
-	return *this;
-}
-
-Test Test::operator--(int postfix)
-{
-	Test tmp = *this;
-	m_a--;
-	return tmp;
 }
